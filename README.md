@@ -109,12 +109,11 @@ the current plugin status. Hit `q` to close the window.
 #### Read The Friendly Documentation
 
 Read through the `init.lua` file in your configuration folder for more
-information about extending and exploring Neovim. That also includes
+information about extending and exploring Neovim. That includes also
 examples of adding popularly requested plugins.
 
 > [!NOTE]
 > For more information about a particular plugin check its repository's documentation.
-
 
 ### Getting Started
 
