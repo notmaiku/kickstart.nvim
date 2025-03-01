@@ -279,13 +279,35 @@ require('lazy').setup({
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
 
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      local wk = require 'which-key'
+      wk.add {
+        { '<leader>f', group = 'file' }, -- group
+        { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find File', mode = 'n' },
+        {
+          '<leader>fb',
+          function()
+            print 'hello'
+          end,
+          desc = 'Foobar',
+        },
+        { '<leader>fn', desc = 'New File' },
+        { '<leader>f1', hidden = true }, -- hide this keymap
+        { '<leader>w', proxy = '<c-w>', group = 'windows' }, -- proxy to window mappings
+        {
+          '<leader>b',
+          group = 'buffers',
+          expand = function()
+            return require('which-key.extras').expand.buf()
+          end,
+        },
+        {
+          -- Nested mappings are allowed and can be added in any order
+          -- Most attributes can be inherited or overridden on any level
+          -- There's no limit to the depth of nesting
+          mode = { 'n', 'v' }, -- NORMAL and VISUAL mode
+          { '<leader>q', '<cmd>q<cr>', desc = 'Quit' }, -- no need to specify mode since it's inherited
+          { '<leader>w', '<cmd>w<cr>', desc = 'Write' },
+        },
       }
     end,
   },
@@ -548,7 +570,12 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
+        angularls = {},
+        html = {},
+        emmet_ls = {},
+        graphql = {},
+        tailwindcss = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -691,8 +718,7 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
@@ -791,7 +817,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'typescript', 'angular' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -802,6 +828,10 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      autotag = {
+        enable = true,
+        filetypes = { 'html', 'javascript', 'typescript', 'angular' },
+      },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
