@@ -308,6 +308,15 @@ require('lazy').setup({
           { '<leader>q', '<cmd>q<cr>', desc = 'Quit' }, -- no need to specify mode since it's inherited
           { '<leader>w', '<cmd>w<cr>', desc = 'Write' },
         },
+        {
+          '<leader>e',
+          group = 'Neo-tree',
+          { '<leader>ee', '<cmd>Neotree toggle<cr>', desc = 'Toggle Neo-tree' },
+          { '<leader>ef', '<cmd>Neotree focus<cr>', desc = 'Focus Neo-tree' },
+          { '<leader>er', '<cmd>Neotree reveal<cr>', desc = 'Reveal Current File' },
+          { '<leader>eg', '<cmd>Neotree git_status<cr>', desc = 'Git Status' },
+          { '<leader>eb', '<cmd>Neotree buffers<cr>', desc = 'Buffers' },
+        },
       }
     end,
   },
@@ -570,12 +579,12 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        angularls = {},
+        angularls = { filetypes = { 'ag', 'typescript' }, init_options = { embeddedLanguages = { html = true } } },
         html = {},
         emmet_ls = {},
         graphql = {},
         tailwindcss = {},
-        ts_ls = {},
+        ts_ls = { filetypes = { 'ag', 'typescript' }, init_options = { embeddedLanguages = { html = true } } },
         --
 
         lua_ls = {
@@ -820,6 +829,10 @@ require('lazy').setup({
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'typescript', 'angular' },
       -- Autoinstall languages that are not installed
       auto_install = true,
+      embedded = {
+        enable = true,
+        filetypes = { 'html', 'ag' }, -- Enable embedded languages for .ag files
+      },
       highlight = {
         enable = true,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
@@ -828,10 +841,10 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
-      autotag = {
-        enable = true,
-        filetypes = { 'html', 'javascript', 'typescript', 'angular' },
-      },
+      -- autotag = {
+      --   enable = true,
+      --   filetypes = { 'html', 'javascript', 'typescript', 'angular' },
+      -- },
     },
     config = function(_, opts)
       -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
