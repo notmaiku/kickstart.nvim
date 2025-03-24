@@ -132,8 +132,6 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
--- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -266,7 +264,6 @@ require('lazy').setup({
   -- For example, in the following configuration, we use:
   --  event = 'VimEnter'
   --
-  -- which loads which-key before all the UI elements are loaded. Events can be
   -- normal autocommands events (`:help autocmd-events`).
   --
   -- Then, because we use the `config` key, the configuration only runs
@@ -276,49 +273,61 @@ require('lazy').setup({
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+    opts = {
+      -- delay between pressing a key and opening which-key (milliseconds)
+      -- this setting is independent of vim.opt.timeoutlen
+      delay = 0,
+      icons = {
+        -- set icon mappings to true if you have a Nerd Font
+        mappings = vim.g.have_nerd_font,
+        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
+        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
+        keys = vim.g.have_nerd_font and {} or {
+          Up = '<Up> ',
+          Down = '<Down> ',
+          Left = '<Left> ',
+          Right = '<Right> ',
+          C = '<C-…> ',
+          M = '<M-…> ',
+          D = '<D-…> ',
+          S = '<S-…> ',
+          CR = '<CR> ',
+          Esc = '<Esc> ',
+          ScrollWheelDown = '<ScrollWheelDown> ',
+          ScrollWheelUp = '<ScrollWheelUp> ',
+          NL = '<NL> ',
+          BS = '<BS> ',
+          Space = '<Space> ',
+          Tab = '<Tab> ',
+          F1 = '<F1>',
+          F2 = '<F2>',
+          F3 = '<F3>',
+          F4 = '<F4>',
+          F5 = '<F5>',
+          F6 = '<F6>',
+          F7 = '<F7>',
+          F8 = '<F8>',
+          F9 = '<F9>',
+          F10 = '<F10>',
+          F11 = '<F11>',
+          F12 = '<F12>',
+        },
+      },
 
-      local wk = require 'which-key'
-      wk.add {
-        { '<leader>f', group = 'file' }, -- group
-        { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find File', mode = 'n' },
-        {
-          '<leader>fb',
-          function()
-            print 'hello'
-          end,
-          desc = 'Foobar',
-        },
-        { '<leader>fn', desc = 'New File' },
-        { '<leader>f1', hidden = true }, -- hide this keymap
-        { '<leader>w', proxy = '<c-w>', group = 'windows' }, -- proxy to window mappings
-        {
-          '<leader>b',
-          group = 'buffers',
-          expand = function()
-            return require('which-key.extras').expand.buf()
-          end,
-        },
-        {
-          -- Nested mappings are allowed and can be added in any order
-          -- Most attributes can be inherited or overridden on any level
-          -- There's no limit to the depth of nesting
-          mode = { 'n', 'v' }, -- NORMAL and VISUAL mode
-          { '<leader>q', '<cmd>q<cr>', desc = 'Quit' }, -- no need to specify mode since it's inherited
-          { '<leader>w', '<cmd>w<cr>', desc = 'Write' },
-        },
-        {
-          '<leader>e',
-          group = 'Neo-tree',
-          { '<leader>ee', '<cmd>Neotree toggle<cr>', desc = 'Toggle Neo-tree' },
-          { '<leader>ef', '<cmd>Neotree focus<cr>', desc = 'Focus Neo-tree' },
-          { '<leader>er', '<cmd>Neotree reveal<cr>', desc = 'Reveal Current File' },
-          { '<leader>eg', '<cmd>Neotree git_status<cr>', desc = 'Git Status' },
-          { '<leader>eb', '<cmd>Neotree buffers<cr>', desc = 'Buffers' },
-        },
-      }
-    end,
+      -- Document existing key chains
+      spec = {
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>l', group = '[L]into' },
+        { '<leader>a', group = 'Harpoon [A]dd' },
+        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>n', group = '[N]eotree', mode = { 'n' } },
+      },
+    },
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -532,6 +541,32 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+          --Diagnostic
+          ---- Show Diagnostics in Floating Window
+          vim.api.nvim_set_keymap(
+            'n',
+            '<leader>le',
+            ':lua vim.diagnostic.open_float()<CR>',
+            { noremap = true, silent = true, desc = 'Show Diagnostic (Float)' }
+          )
+
+          -- Goto Next Diagnostic
+          vim.api.nvim_set_keymap('n', '<leader>ln', ':lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true, desc = 'Next Diagnostic' })
+
+          -- Goto Previous Diagnostic
+          vim.api.nvim_set_keymap('n', '<leader>lp', ':lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true, desc = 'Prev Diagnostic' })
+
+          -- All Diagnostics (Telescope)
+          vim.api.nvim_set_keymap(
+            'n',
+            '<leader>lo',
+            ':lua require("telescope.builtin").diagnostics()<CR>',
+            { noremap = true, silent = true, desc = 'All Diagnostics (Telescope)' }
+          )
+
+          -- Neotree
+          vim.api.nvim_set_keymap('n', '<leader>ne', ':Neotree toggle<CR>', { noremap = true, silent = true, desc = 'NeoTree Toggle' })
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -585,6 +620,7 @@ require('lazy').setup({
         graphql = {},
         tailwindcss = {},
         ts_ls = { filetypes = { 'ag', 'typescript' }, init_options = { embeddedLanguages = { html = true } } },
+        marksman = {},
         --
 
         lua_ls = {

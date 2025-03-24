@@ -36,6 +36,29 @@ return {
             ['<c-l>'] = 'clear_filter',
             ['[g'] = 'prev_git_modified',
             [']g'] = 'next_git_modified',
+            ['I'] = 'toggle_hidden',
+          },
+        },
+        filesystem = {
+          filtered_items = {
+            visible = false, -- When true, they will just be hidden, not deleted.
+            force_focus = true, -- This also applies to the filter_dirs option.
+            hide_dotfiles = true, -- This hides ".*" files
+            hide_gitignored = true, -- Hide files ignored in .gitignore
+            hide_by_name = {
+              --"*.swp",
+              --".DS_Store",
+              --"thumbs.db",
+            },
+            hide_by_pattern = { -- Uses glob style patterns
+              --"*.png",
+              --"!.gitignore",
+              --"!.gitkeep",
+            },
+            never_show = { -- Remains hidden even if visible is toggled.
+              --".DS_Store",
+              --"thumbs.db"
+            },
           },
         },
       }
