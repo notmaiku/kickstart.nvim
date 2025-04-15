@@ -222,6 +222,8 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
+--
+
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -323,9 +325,9 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>l', group = '[L]into' },
+        { '<leader>n', group = '[N]eotree' },
         { '<leader>a', group = 'Harpoon [A]dd' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-        { '<leader>n', group = '[N]eotree', mode = { 'n' } },
       },
     },
   },
@@ -564,9 +566,6 @@ require('lazy').setup({
             { noremap = true, silent = true, desc = 'All Diagnostics (Telescope)' }
           )
 
-          -- Neotree
-          vim.api.nvim_set_keymap('n', '<leader>ne', ':Neotree toggle<CR>', { noremap = true, silent = true, desc = 'NeoTree Toggle' })
-
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -645,6 +644,9 @@ require('lazy').setup({
       --    :Mason
       --
       --  You can press `g?` for help in this menu.
+      require('lspconfig').gdscript.setup {
+        capabilities = capabilities,
+      }
       require('mason').setup()
 
       -- You can add other tools here that you want Mason to install
@@ -865,6 +867,9 @@ require('lazy').setup({
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'typescript', 'angular' },
       -- Autoinstall languages that are not installed
       auto_install = true,
+      extension = {
+        gd = 'gdscript',
+      },
       embedded = {
         enable = true,
         filetypes = { 'html', 'ag' }, -- Enable embedded languages for .ag files
